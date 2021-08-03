@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block content %}
+   <div class="home">
+     <h1>Find Nearest Airport</h1>
+      <p>Enter the latitude and longitude of the position you want to search from.</p>
+      <p>After entering submit, the nearest airport to your position will be displayed.</p>
+      <form action = "http://localhost:5001/result" method = "POST">
+
+         <p><label for="Latitude">Latitude</label></p>
+         <p><input type = "number" step=0.00001 name = "latitude" /></p>
+         <br class="clear" />
+
+         <p><label for="Longitude">Longitude</label></p>
+         <p><input type = "number" step=0.0000001 name = "longitude" /></p>
+         <br class="clear" />
+
+         <p><label for="submit"> </label></p>
+         <p><input type = "submit" value = "submit" /></p>
+      </form>
+   </div>
+{% endblock %}

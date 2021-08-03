@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block content %}
+   <div class="about">
+      <h1>Documentation</h1>
+      {% for line in documentation %}
+         <p> {{ line }} </p>
+      {% endfor %}
+   </div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block content %}
+   <div class="home">
+        <h1>Nearest Airport</h1>
+        <p>{{ nearest[0][0] }} ({{ nearest[0][1]}}) is the nearest airport.</p>
+        <p>( {{ nearest[0][2] }}, {{ nearest[0][3] }} ) distance: {{ '%0.2f'|format(nearest[1]|float) }} km</p>
+        <p class="highlight">From Position</p>
+        <p>( {{ form.data['latitude'] }}, {{ form.data['longitude'] }} )</p>
+        <br class="clear" />
+   </div>
+{% endblock %}
