@@ -3,11 +3,15 @@ Single location to define all text constants.
 Used to provide help and usage information
 """
 
+USAGE = """
+usage: > python lookup_airport.py --file=directory/uk_airport_coords.csv
+For help: python lookup_airport.py --help or --doc
+"""
+
 # Add any required additional help text to appear at end of parameter help.
 HELP_EPILOG_TEXT = """
 --position is an optional argument. When omitted the user will be prompted for a position.
 """
-
 
 DOCUMENTATION = """
 This tool will locate the nearest airport from a given set of data, to the coordinates entered by the user.
@@ -57,10 +61,5 @@ Example usage:
     > python lookup_airport.py --file=data/uk_airport_coords.csv --gui
     > python lookup_airport.py --file=data/uk_airport_coords.csv --position="51.26950,-1.03896"
 
-"""
-
-USAGE = """
-usage: > python lookup_airport.py --file=directory/uk_airport_coords.csv
-For help: python lookup_airport.py --help or --doc
 """
 

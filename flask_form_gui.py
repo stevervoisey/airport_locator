@@ -8,6 +8,7 @@ The web gui is currently only a prototype and runs using  the python development
 on http://127.0.0.1:5001/
 """
 import os
+import pdb
 
 from flask import Flask, render_template, redirect, flash
 from forms import CoordinateForm
@@ -38,7 +39,7 @@ def about():
 
 @app.route('/locations/')
 def locations():
-    return render_template('locations.html.jinja', airports=app.config['airports'])
+    return render_template('list_locations.html.jinja', airports=app.config['airports'])
 
 
 def find_nearest(form: CoordinateForm):
@@ -48,8 +49,18 @@ def find_nearest(form: CoordinateForm):
     )
     return render_template(
          "distance_result_from_form.html.jinja",
-         form=form,
          nearest=nearest)
+
+@app.route('/map/<latitude>/<longitude>')
+def map(latitude, longitude):
+    if app.config['mapping_api'] == "UNDEFINED":
+        return render_template("maps/map_api_missing.html.jinja")
+
+    return render_template(
+         "maps/map_by_coordinate_with_zoom.html.jinja",
+        latitude=latitude,
+        longitude=longitude,
+        api_key=app.config['mapping_api'])
 
 
 if __name__ == '__main__':

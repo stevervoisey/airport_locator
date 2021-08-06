@@ -88,12 +88,13 @@ def option1(airports) -> None:
             print(F'Invalid coordinates, please enter valid values.')
             print(F'{fails[1]} {fails[0]}')
         else:
-            nearest, distance, messages = airports.shortest_distance((latitude, longitude))
-            print(F'\nnearest airport to ({latitude},{longitude}) '
-                  F'is: {nearest[0]} location: ({nearest[2]},{nearest[3]}) '
-                  F'distance: {distance:.2f} km')
-            if messages:
-                print(messages)
+            result = airports.shortest_distance((latitude, longitude))
+            print(F'nearest airport to ({result.source_latitude},{result.source_longitude})'
+                  F' is: {result.destination_name} '
+                  F'location:({result.destination_latitude},{result.destination_longitude}) '
+                  F'distance: {result.distance:.2f} km')
+            if result.messages:
+                print(result.messages)
             input("\nHit any key to continue")
             clear()
             return

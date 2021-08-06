@@ -1,5 +1,33 @@
 from math import cos, asin, sqrt, pi
-from utilities import validate_coordinates, InvalidCoordinate
+from utilities import validate_coordinates
+from exceptions import InvalidCoordinate
+
+
+class Distance:
+    """
+                tuple(str, str, float, float, float, list[str])
+            tuple containing the:
+                closest destination to position -> name, code, latitude, longitude
+                distance from position          -> distance
+                message list                    -> messages
+    """
+    def __init__(self, source: tuple, destination: tuple, distance: float, messages: list):
+        self.source_latitude = source[0]
+        self.source_longitude = source[1]
+        self.destination_name = destination[0]
+        self.destination_code = destination[1]
+        self.destination_latitude = destination[2]
+        self.destination_longitude = destination[3]
+        self.distance = distance
+        self.messages = messages
+
+    def __str__(self):
+        return(
+            F"source_latitude: {self.source_latitude}, source_longitude: {self.source_longitude}\n"
+            F"destination_name: {self.destination_name}, destination_code: {self.destination_code}\n"
+            F"destination_latitude: {self.destination_latitude}, destination_longitude: {self.destination_longitude}\n"
+            F"distance: {self.distance}\n"
+            F"messages: {self.messages}")
 
 
 class Destinations:
@@ -66,7 +94,7 @@ class Destinations:
         # split up coordinates into latitude,longitude pairs
         return self._circular_distance_from_lat_lon(coord1[0], coord1[1], coord2[0], coord2[1])
 
-    def shortest_distance(self, position: tuple) -> tuple:
+    def shortest_distance(self, position: tuple) -> Distance:
         """
         Calculate the shortest distance between two points on a sphere.
 
@@ -80,6 +108,7 @@ class Destinations:
                 tuple of float numbers representing a pair of coordinates (latitude, longitude)
         return
         ------
+        ToDo: update return distance
             tuple(str, str, float, float, float, list[str])
             tuple containing the:
                 closest destination to position -> name, code, latitude, longitude
@@ -109,4 +138,5 @@ class Destinations:
                 messages.append(
                     F'WARNING: Multiple nearest airports found [{entry[0]} , {short_destination[0]}]')
 
-        return short_destination, short_distance, messages
+        result = Distance(position, short_destination, short_distance, messages)
+        return result

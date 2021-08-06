@@ -9,40 +9,40 @@ on http://127.0.0.1:5001/
 """
 
 from flask import Flask, render_template, request, redirect
-app = Flask(__name__)
+simple_app = Flask(__name__)
 
 
-@app.route('/')
+@simple_app.route('/')
 def index():
     return redirect(f"/home/")
 
 
-@app.route('/home/')
+@simple_app.route('/home/')
 def home():
-    return render_template('get_location_form.html')
+    return render_template('simple/get_location_simple.html')
 
 
-@app.route('/about/')
+@simple_app.route('/about/')
 def about():
-    return render_template('about.html.jinja', documentation=app.config['documentation'])
+    return render_template('about.html.jinja', documentation=simple_app.config['documentation'])
 
 
-@app.route('/locations/')
+@simple_app.route('/locations/')
 def locations():
-    return render_template('locations.html.jinja', airports=app.config['airports'])
+    return render_template('simple/list_locations_simple.html.jinja', airports=simple_app.config['airports'])
 
 
-@app.route('/result', methods = ['POST', 'GET'])
+@simple_app.route('/result', methods = ['POST', 'GET'])
 def find_nearest():
     if request.method == 'POST':
         result = request.form
         return render_template(
-             "distance_result.html.jinja",
+             "simple/distance_result_simple.html.jinja",
              result=result,
-             nearest=app.config['airports'].shortest_distance(
+             nearest=simple_app.config['airports'].shortest_distance(
                 (float(result['latitude']),
                  float(result['longitude']))))
 
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    simple_app.run(debug=False)

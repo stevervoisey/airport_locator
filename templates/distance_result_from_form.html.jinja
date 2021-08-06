@@ -2,10 +2,15 @@
 {% block content %}
    <div class="home">
         <h1>Nearest Airport</h1>
-        <p>{{ nearest[0][0] }} ({{ nearest[0][1]}}) is the nearest airport.</p>
-        <p>( {{ nearest[0][2] }}, {{ nearest[0][3] }} ) distance: {{ '%0.2f'|format(nearest[1]|float) }} km</p>
+
+        <p><a href="{{ url_for('map', latitude=nearest.destination_latitude, longitude=nearest.destination_longitude) }}">
+        {{ nearest.destination_name }} </a> ({{ nearest.destination_code}}) is the nearest airport.</p>
+        <p>( {{ nearest.destination_latitude }}, {{ nearest.destination_longitude }} )</p>
+        <p>distance: {{ '%0.2f'|format(nearest.distance|float) }} km</p>
         <p class="highlight">From Position</p>
-        <p>( {{ form.data['latitude'] }}, {{ form.data['longitude'] }} )</p>
+
+        <p>( {{ nearest.source_latitude }}, {{ nearest.source_longitude }} )</p>
         <br class="clear" />
    </div>
 {% endblock %}
+

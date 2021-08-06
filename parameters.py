@@ -2,29 +2,16 @@ import sys
 import os
 from messages import DOCUMENTATION, USAGE
 from utilities import validate_coordinates
-
-
-def exit_on_error(message):
-    """
-    display a message and terminate
-
-    Parameters
-    ----------
-    message : str
-        message to display
-
-    Returns
-    -------
-        n/a
-    """
-    print(F'{message}\n{USAGE}')
-    sys.exit()
+from exceptions import MissingRequiredParameters, InvalidDataFileInputParameter
 
 
 class Parameters:
     """
     Perform additional verification and manipulation of command line arguments parsed by argparse.
     arguments are the made available as class instance attributes.
+
+    All errors are raised as exceptions. This allows for full testing of the Parameters class.
+    Exceptions can then be converted to errors in the call module if required.
     """
     def __init__(self, args):
         """
@@ -36,8 +23,10 @@ class Parameters:
         """
         if args.doc:
             self._doc()
+        self.config_file = args.config
         self.csv_file = args.file
         self.gui = args.gui
+        self.gui_simple = args.gui_simple
         self.position = args.position
 
         self._set_parameters()
@@ -60,10 +49,10 @@ class Parameters:
     def _verify_parameters(self):
         # Check for mandatory parameter 'csv_file'
         if not self.csv_file:
-            exit_on_error("lookup_airport.py: error: the following arguments are required: --file")
+            raise MissingRequiredParameters("lookup_airport.py: error: the following arguments are required: --file")
         # verify 'csv_file' is a valid file
         if not os.path.isfile(self.csv_file):
-            exit_on_error(F"invalid --file [{self.csv_file}] - not a valid file.")
+            raise InvalidDataFileInputParameter(F"invalid --file [{self.csv_file}] - not a valid file.")
         # verify position is valid coordinate pair (latitude,longitude)
         if self.position is not None:
             validate_coordinates(self.position)

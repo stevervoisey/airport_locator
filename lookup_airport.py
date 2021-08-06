@@ -1,5 +1,6 @@
 """
-usage: lookup_airport.py [-h] [-d] [--file FILE] [--gui] [--position POSITION]
+usage: lookup_airport.py [-h] [-d] [--file FILE] [--gui] [--gui_simple]
+                         [--position POSITION]
 
 Nearest airport locator
 
@@ -8,20 +9,26 @@ optional arguments:
   -d, --doc            Display additional documentation about the tool.
   --file FILE          full path and file name for the data input file.
   --gui                startup a web gui user interface.
+  --gui_simple         startup a simple web gui interface without using flask
+                       forms.
   --position POSITION  Position to calculate distance from.
 
-    --position is an optional argument. When omitted the user will be prompted for
-    a position.
+--position is an optional argument. When omitted the user will be prompted for
+a position.
 """
+import pdb
 import sys,os
 import argparse
 from parameters import Parameters
 from messages import DOCUMENTATION, HELP_EPILOG_TEXT
 from utilities import read_data_from_file
+from manage_config_files import load_config_file_from_json
 from destination_classes import Destinations
 from console_menu import main_menu
-# from flask_simple_gui import app # - Example of simple GUI using HTML form
+from flask_simple_gui import simple_app # - Example of simple GUI using HTML form
 from flask_form_gui import app # Using flask_wtf form
+from exceptions import MissingRequiredParameters, InvalidDataFileInputParameter, \
+    exit_on_error, DisplayDocumentationAndExit
 
 
 def process_arguments(arguments: list):
@@ -43,6 +50,14 @@ def process_arguments(arguments: list):
     parser = argparse.ArgumentParser(
         description='Nearest airport locator',
         epilog=HELP_EPILOG_TEXT
+    )
+
+    parser.add_argument(
+        "--config",
+        required=False,
+        type=str,
+        help="full path and file name for the configuration input file.",
+        default=None
     )
 
     parser.add_argument(
@@ -68,12 +83,34 @@ def process_arguments(arguments: list):
     )
 
     parser.add_argument(
+        "--gui_simple",
+        help="startup a simple web gui interface without using flask forms.",
+        action='store_true',
+        default=False
+    )
+
+    parser.add_argument(
         "--position",
         type=str,
         help="Position to calculate distance from.",
         default=None
     )
     return parser.parse_args(arguments)
+
+
+def process_parameters():
+    try:
+        parameters = Parameters(process_arguments(sys.argv[1:]))
+    except MissingRequiredParameters as e:
+        exit_on_error(str(e))
+
+    except InvalidDataFileInputParameter as e:
+        exit_on_error(str(e))
+
+    except DisplayDocumentationAndExit as e:
+        exit_on_error(None)
+
+    return parameters
 
 
 def main():
@@ -106,21 +143,30 @@ def main():
     -------
     None
     """
-    parameters = Parameters(process_arguments(sys.argv[1:]))
+    parameters = process_parameters()
+    config = load_config_file_from_json(parameters.config_file)
     airports = Destinations(read_data_from_file(parameters.csv_file))
 
     if parameters.position is not None:
-        nearest, distance, messages = airports.shortest_distance(parameters.position)
-        print(F'nearest airport to {parameters.position} is: {nearest[0]} '
-              F'location:({nearest[2]},{nearest[3]}) '
-              F'distance: {distance:.2f} km')
-        if messages:
-            print(messages)
+        result = airports.shortest_distance(parameters.position)
+        print(F'nearest airport to ({result.source_latitude},{result.source_longitude})'
+              F' is: {result.destination_name} '
+              F'location:({result.destination_latitude},{result.destination_longitude}) '
+              F'distance: {result.distance:.2f} km')
+        if result.messages:
+            print(result.messages)
         sys.exit()
     elif parameters.gui:
-        app.config['documentation'] = DOCUMENTATION.split("\n")
-        app.config['airports'] = airports
-        app.run(port=5001, debug=True)
+        if parameters.gui_simple:
+            simple_app.config['documentation'] = DOCUMENTATION.split("\n")
+            simple_app.config['airports'] = airports
+            simple_app.run(port=5001, debug=True)
+        else:
+            app.config['documentation'] = DOCUMENTATION.split("\n")
+            app.config['airports'] = airports
+            app.config['mapping_api'] = config['DEFAULT']['MAPPING_API']
+
+            app.run(port=5001, debug=True)
     else:
         main_menu(airports)
 

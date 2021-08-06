@@ -1,0 +1,17 @@
+<!- Example of handling results after using a basic HTML form. ->
+<!- This has been replace by getting results from the flask_wtf form. ->
+<!- use switch --gui-simple to see this results page. ->
+
+{% extends "layout.html" %}
+{% block content %}
+   <div class="home">
+        <h1>Nearest Airport</h1>
+        <p>{{ nearest.destination_name }} ({{ nearest.destination_code}}) is the nearest airport.</p>
+        <p>( {{ nearest.destination_latitude }}, {{ nearest.destination_longitude }} )
+        distance: {{ '%0.2f'|format(nearest.distance|float) }}  km</p>
+
+        <p class="highlight">From Position</p>
+        <p>( {{ nearest.source_latitude }}, {{ nearest.source_longitude }} )</p>
+        <br class="clear" />
+   </div>
+{% endblock %}

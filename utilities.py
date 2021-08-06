@@ -1,19 +1,5 @@
 import re
-
-
-class InvalidCoordinate(Exception):
-    """Raise exception when coordinates (latitude,longitude) contain invalid values."""
-    pass
-
-
-class InvalidFileHeadingError(Exception):
-    """Raise exception when data file has invalid headings."""
-    pass
-
-
-class InvalidFileDataError(Exception):
-    """Raise exception when file data contains invalid data types."""
-    pass
+from exceptions import InvalidFileHeadingError, InvalidFileDataError
 
 
 def validate_file_headings(headings: str) -> bool:

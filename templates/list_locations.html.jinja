@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block content %}
+   <div class="locations">
+     <h1>Find Nearest Airport</h1>
+       <p>The following data is used to locate the nearest airport.</p>
+       <p>From a given pair of coordinates (latitude,longitude),
+           <br>the airport with nearest matching coordinates,
+           <br>using a direct, as the crow flies, distance, will be selected.
+       </p>
+       <table border = 1>
+          <tr>
+              <th>Airport</th><th>Code</th><th>Latitude</th><th>Longitude</th>
+          </tr>
+
+              {% for row in airports.destinations %}
+                {% set name, code, latitude, longitude = row %}
+                <tr>
+                 <td><a href="{{ url_for('map', latitude=latitude, longitude=longitude) }}"> {{ name }}</a></td>
+                 <td> {{ code }} </td>
+                 <td> {{ latitude }} </td>
+                 <td> {{ longitude }} </td>
+                </tr>
+              {% endfor %}
+      </table>
+   </div>
+{% endblock %}

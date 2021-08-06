@@ -1,0 +1,11 @@
+{
+    "DEFAULT": {
+        "MAPPING_API": "UNDEFINED",
+        "SECRET_KEY": "secret-key"},
+    "TEST": {
+        "MAPPING_API": "UNDEFINED",
+        "SECRET_KEY": "secret-key"},
+    "PRODUCTION": {
+        "MAPPING_API": "UNDEFINED",
+        "SECRET_KEY": "secret-key"}
+}

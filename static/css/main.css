@@ -67,6 +67,15 @@ div.locations {
      -moz-border-radius: 6px;
           border-radius: 6px;
 }
+div.map {
+  padding: 5px 5px 5px 5px;
+  background-color: #E6E6FA;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
+  width: 100%;
+  height: 100vh;
+}
 h2 {
   font-size: 3em;
   margin-top: 40px;
